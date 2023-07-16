@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 import MoviesList from "./components/MoviesList";
+import AddMovie from "./components/AddMovie";
 import "./App.css";
 
 function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [tc, setTc] = useState(false);
 
   //this is using then chain
   /*
@@ -38,7 +38,10 @@ function App() {
     setError(null);
 
     try {
-      const response = await fetch("https://swapi.dev/api/films/");
+      // const response = await fetch("https://swapi.dev/api/films/");
+      const response = await fetch(
+        "https://react-http-request-test-12f89-default-rtdb.asia-southeast1.firebasedatabase.app/movies.json"
+      );
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
@@ -63,10 +66,14 @@ function App() {
     fetchMoviesHandler();
   }, [fetchMoviesHandler]);
 
+  function addMovieHandler(movie) {
+    console.log(movie);
+  }
+
   let content = <p>No movies found</p>;
 
   if (movies.length > 0) {
-    content = <MoviesList movies={movies} showTc={tc} />;
+    content = <MoviesList movies={movies} />;
   }
 
   if (error) {
@@ -79,6 +86,9 @@ function App() {
 
   return (
     <React.Fragment>
+      <section>
+        <AddMovie onAddMovie={addMovieHandler} />
+      </section>
       <section>
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
