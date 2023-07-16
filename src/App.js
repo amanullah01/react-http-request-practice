@@ -8,6 +8,7 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [movieAdded, setMovieAdded] = useState(false);
 
   //this is using then chain
   /*
@@ -46,15 +47,20 @@ function App() {
         throw new Error("Something went wrong");
       }
       const data = await response.json();
-      const transformedData = data.results.map((movieData) => {
-        return {
-          id: movieData.episode_id,
-          title: movieData.title,
-          releaseDate: movieData.release_date,
-          openingText: movieData.opening_crawl,
-        };
-      });
-      setMovies(transformedData);
+
+      console.log(data);
+
+      const loadedMovies = [];
+
+      for (const key in data) {
+        loadedMovies.push({
+          id: key,
+          title: data[key].title,
+          openingText: data[key].openingText,
+          releaseDate: data[key].releaseDate,
+        });
+      }
+      setMovies(loadedMovies);
     } catch (error) {
       setError(error.message);
     }
@@ -64,11 +70,25 @@ function App() {
   useEffect(() => {
     console.log("use effect");
     fetchMoviesHandler();
-  }, [fetchMoviesHandler]);
+  }, [fetchMoviesHandler, movieAdded]);
 
-  function addMovieHandler(movie) {
+  const addMovieHandler = async (movie) => {
     console.log(movie);
-  }
+    const response = await fetch(
+      "https://react-http-request-test-12f89-default-rtdb.asia-southeast1.firebasedatabase.app/movies.json",
+      {
+        method: "POST",
+        body: JSON.stringify(movie),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    console.log("movie response data after post");
+    console.log(data);
+    setMovieAdded(true);
+  };
 
   let content = <p>No movies found</p>;
 
