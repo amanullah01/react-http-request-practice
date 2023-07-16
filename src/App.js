@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import MoviesList from "./components/MoviesList";
 import "./App.css";
@@ -7,6 +7,7 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [tc, setTc] = useState(false);
 
   //this is using then chain
   /*
@@ -31,7 +32,8 @@ function App() {
   };
   */
   //alternet of then, using async await
-  const fetchMoviesHandler = async () => {
+  const fetchMoviesHandler = useCallback(async () => {
+    console.log("movie fetch");
     setIsLoading(true);
     setError(null);
 
@@ -54,12 +56,17 @@ function App() {
       setError(error.message);
     }
     setIsLoading(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    console.log("use effect");
+    fetchMoviesHandler();
+  }, [fetchMoviesHandler]);
 
   let content = <p>No movies found</p>;
 
   if (movies.length > 0) {
-    content = <MoviesList movies={movies} />;
+    content = <MoviesList movies={movies} showTc={tc} />;
   }
 
   if (error) {
