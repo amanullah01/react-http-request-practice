@@ -8,7 +8,6 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [movieAdded, setMovieAdded] = useState(false);
 
   //this is using then chain
   /*
@@ -70,7 +69,7 @@ function App() {
   useEffect(() => {
     console.log("use effect");
     fetchMoviesHandler();
-  }, [fetchMoviesHandler, movieAdded]);
+  }, [fetchMoviesHandler]);
 
   const addMovieHandler = async (movie) => {
     console.log(movie);
@@ -87,7 +86,6 @@ function App() {
     const data = await response.json();
     console.log("movie response data after post");
     console.log(data);
-    setMovieAdded(true);
   };
 
   let content = <p>No movies found</p>;
