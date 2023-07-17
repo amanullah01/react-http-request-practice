@@ -67,7 +67,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("use effect");
+    console.log("use effect first load and change fetch");
     fetchMoviesHandler();
   }, [fetchMoviesHandler]);
 
@@ -83,9 +83,9 @@ function App() {
         },
       }
     );
-    const data = await response.json();
+    await response.json();
     console.log("movie response data after post");
-    console.log(data);
+    fetchMoviesHandler();
   };
 
   let content = <p>No movies found</p>;
